@@ -1,18 +1,23 @@
 import uvicorn
-from typing import Optional
+from pydantic import BaseModel
 
 from fastapi import FastAPI
+
+
+class Item(BaseModel):
+    name: str
+    description: str = None
+    price: float
+    tax: float = None
 
 
 app = FastAPI()
 
 
-@app.get("/items/{item_id}")
-async def read_user_item(
-        item_id: str, limit: Optional[int] = None
-):
-    item = {"item_id": item_id, "limit": limit}
+@app.post("/items/")
+async def create_item(item: Item):
     return item
+
 
 if __name__ == "__main__":
     uvicorn.run(
